@@ -13,5 +13,14 @@ class CorsMiddlewares extends Middlewares {
   };
 
   @override
-  Future<Response> execute(Request request) {}
+  Future<Response> execute(Request request) async {
+    if (request.method == 'OPTIONS') {
+      return Response(HttpStatus.ok, headers: headers);
+    }
+
+    final response = await innerHandler(request);
+
+    //adiciona os headers de segurança no response
+    return response.change(headers: headers);
+  }
 }
